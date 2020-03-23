@@ -74,5 +74,5 @@ link_noticia=$(func_sespa | egrep "^$numero=" | sed "s/^$numero=//")
 google-chrome $link_noticia
 }
 
-# Executa função func_main() suprimindo saídas erro com o "2>&-"
+# Executa função func_main() suprimindo saídas de erro com o "2>&-"
 func_main 2>&-
