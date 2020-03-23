@@ -21,10 +21,29 @@ func_titulo_materia(){
     func_sespa2 | cut -d / -f 4- | sed "s/\/$//" | sort |egrep -o "([0-9]{4}.*|\/.*)" | sed "s/^\///"| nl | sed "s/^ *//;s/\t/ /"
 }
 
+func_dado_mundial(){
+
+    curl -s https://coronavirus-tracker-api.herokuapp.com/v2/locations | jq '{"casos_confirmados": ."latest"."confirmed" , "mortes": ."latest"."deaths" , "recuperados": ."latest"."recovered"}' | egrep -v "(^\{|^\})" | tr -d "\"" | tr -d "\,"
+
+}
+
+func_dado_brasil(){
+
+    curl -s https://coronavirus-tracker-api.herokuapp.com/v2/locations | jq '{ "pais": ."locations"[35]."country" , "atualizacoes": ."locations"[35]."last_updated" , "confirmados": ."locations"[35]."latest"."confirmed" , "recuperados": ."locations"[35]."latest"."recovered" , "mortes": ."locations"[35]."latest"."deaths" }' | egrep -v "(^\{|^\})" | tr -d "\"" | tr -d "\,"
+
+}
+
+
 echo " 
    SESPA (www.saude.pa.gov.br)
 
            $(date +%d/%m/%Y)
+           
+Dado munial:
+$(func_dado_mundial)
+
+Dado Brasil:
+$(func_dado_brasil)
 "
 
 
