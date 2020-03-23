@@ -51,7 +51,7 @@ echo "
 
            $(date +%d/%m/%Y)
            
-Dados munial:
+Dados mundiais:
 $(func_dado_mundial)
 
 Dados Brasil:
