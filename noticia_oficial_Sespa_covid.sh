@@ -42,6 +42,7 @@ func_dado_brasil(){
 }
 
 
+func_main(){
 echo " 
    SESPA (www.saude.pa.gov.br)
    E-MAIL: ouvidoria@sespa.pa.gov.br
@@ -71,3 +72,7 @@ link_noticia=$(func_sespa | egrep "^$numero=" | sed "s/^$numero=//")
 # Executa navegador para acessar link contido na váriavel de ambiente $link_noticia. O navegador pode ser
 # alterado por qualquer outro, batando assim substituir a "google-chrome" por qualquer outro navegador.
 google-chrome $link_noticia
+}
+
+# Executa função func_main() suprimindo saídas erro com o "2>&-"
+func_main 2>&-
