@@ -24,7 +24,7 @@ var_func_sespa=$(func_sespa)
 # Usa a saída da função func_sespa() para gerar uma lista/menu com título e timestamp da respectiva notícia.
 func_titulo_materia(){
 
-    echo "$var_func_sespa" | cut -d / -f 4- | sed "s/\/$//" | sort |egrep -o "([0-9]{4}.*|\/.*)" | sed "s/^\///"| nl | sed "s/^ *//;s/\t/ /"
+    echo "$var_func_sespa" | cut -d / -f 4- | sed "s/\/$//" | sort |egrep -o "([0-9]{4}.*|\/.*)" | sed "s/^\///"| nl
 }
 
 var_func_titulo_materia=$(func_titulo_materia)
