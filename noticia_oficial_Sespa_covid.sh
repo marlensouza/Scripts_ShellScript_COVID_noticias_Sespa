@@ -4,8 +4,8 @@
 # 
 # Autor: Marlen Souza
 #
-# Descrição: Selecionar links de fontes oficiais para 
-#            acompanhar noticias dobre o CORONA VIRUS (COVID-19)
+# Descrição: Filtrar notícias sobre o CORONA VIRUS (COVID-19) 
+#            no site oficial da SESPA
 #
 # Criado: 22/03/2020
 #
@@ -62,7 +62,7 @@ $(func_dado_brasil)
 func_titulo_materia
 
 echo -n "
-Digite o número da noticia: "
+Digite o número da notícia: "
 # Recebe a opção/número e instância a variável número
 read numero
 
