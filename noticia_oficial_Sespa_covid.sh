@@ -51,10 +51,10 @@ echo "
 
            $(date +%d/%m/%Y)
            
-Dado munial:
+Dados munial:
 $(func_dado_mundial)
 
-Dado Brasil:
+Dados Brasil:
 $(func_dado_brasil)
 "
 
