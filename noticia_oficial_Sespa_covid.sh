@@ -74,10 +74,10 @@ link_noticia=$(func_sespa | egrep "^$numero=" | sed "s/^$numero=//")
 google-chrome $link_noticia
 }
 
-# Executa função func_main() suprimindo saídas de erro com o "2>&-"
 while :
 do
   echo -e '\033c'
+  # Executa função func_main() suprimindo saídas de erro com o "2>&-"
   func_main 2>&-
   read -p "Deseja continuar (s/n)? "
   [[ ${REPLY^} == N ]] && exit
