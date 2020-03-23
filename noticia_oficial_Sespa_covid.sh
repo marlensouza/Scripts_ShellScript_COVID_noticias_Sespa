@@ -12,6 +12,7 @@
 
 # Função responsável por acessar site da SESPA via CURL no Endereço www.saude.pa.gov.br e filtrar conteúdo via expressão regular
 # com EGREP usanso como parâmetros de expressões regulares as seguintes ocorrências "(covid|corona|gripe)".
+
 func_sespa(){
     
     curl -s http://www.saude.pa.gov.br/category/noticias/page/[0-5]/ | egrep -i "(covid|corona|gripe)" | egrep -o "\http\:.*\/" | sed "s/\".*//g" | sort | uniq | egrep -v "\/feed\/$" | nl | sed "s/^ *//;s/\t/ /" | tr " " "=" | egrep -v "\.jpg$"
@@ -43,6 +44,9 @@ func_dado_brasil(){
 
 echo " 
    SESPA (www.saude.pa.gov.br)
+   E-MAIL: ouvidoria@sespa.pa.gov.br
+   TELEFONES: (91) 3222-4184 / 3212-5000, Discagem gratuita: 0800-280 9889.
+   Twitter https://twitter.com/SespaPara
 
            $(date +%d/%m/%Y)
            
@@ -53,15 +57,17 @@ Dado Brasil:
 $(func_dado_brasil)
 "
 
-
+# Título/menu
 func_titulo_materia
 
 echo -n "
 Digite o número da noticia: "
+# Recebe a opção/número e instância a variável número
 read numero
 
-link_noticia=$(func_sespa2 | egrep "^$numero=" | sed "s/^$numero=//")
+# Gera link da notícia
+link_noticia=$(func_sespa | egrep "^$numero=" | sed "s/^$numero=//")
 
+# Executa navegador para acessar link contido na váriavel de ambiente $link_noticia. O navegador pode ser
+# alterado por qualquer outro, batando assim substituir a "google-chrome" por qualquer outro navegador.
 google-chrome $link_noticia
-
-func_titulo_materia
