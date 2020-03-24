@@ -43,7 +43,7 @@ var_func_dado_mundial=$(func_dado_mundial)
 # jq é o responsável por tratar os dados de saída da API no formato JSON.
 func_dado_brasil(){
 
-    curl -s https://coronavirus-tracker-api.herokuapp.com/v2/locations | jq '{ "pais": ."locations"[35]."country" , "atualizacao": ."locations"[35]."last_updated" , "confirmados": ."locations"[35]."latest"."confirmed" , "recuperados": ."locations"[35]."latest"."recovered" , "mortes": ."locations"[35]."latest"."deaths" }' | egrep -v "(^\{|^\})" | tr -d "\"" | tr -d "\," | tr -d "\"" | tr -d "\," | sed "s/T.*//"
+    curl -s https://coronavirus-tracker-api.herokuapp.com/v2/locations | jq '{ "pais": ."locations"[35]."country" , "atualizacao": ."locations"[35]."last_updated" , "confirmados": ."locations"[35]."latest"."confirmed" , "recuperados": ."locations"[28]."latest"."recovered" , "mortes": ."locations"[35]."latest"."deaths" }' | egrep -v "(^\{|^\})" | tr -d "\"" | tr -d "\," | tr -d "\"" | tr -d "\," | sed "s/T.*//"
 
 }
 
