@@ -65,10 +65,10 @@ echo "
 
            $(date +%d/%m/%Y)
 
-Dados mundiais:
+Dados mundiais COVID-19:
 $var_func_dado_mundial
 
-Dados Brasil:
+Dados Brasil COVID-19:
 $var_func_dado_brasil
 "
 
