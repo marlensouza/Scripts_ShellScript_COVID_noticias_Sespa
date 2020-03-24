@@ -15,7 +15,7 @@
 
 func_sespa(){
 
-    curl -s http://www.saude.pa.gov.br/category/noticias/page/[0-5]/ | egrep -i "(covid|corona|gripe)" | egrep -o "\http\:.*\/" | sed "s/\".*//g" | sort | uniq | egrep -v "\/feed\/$" | nl | sed "s/^ *//;s/\t/ /" | tr " " "=" | egrep -v "\.jpg$"
+    curl -s http://www.saude.pa.gov.br/category/noticias/page/[0-5]/ | egrep -i "(covid|corona|gripe)" | egrep -o "\http\:.*\/" | sed "s/\".*//g" | sort | uniq | egrep -v "\/feed\/$" | nl | sed "s/^ *//;s/\t/ /" | tr " " "=" | egrep -v "\.(jpg|png)$"
 
 }
 
@@ -31,19 +31,37 @@ var_func_titulo_materia=$(func_titulo_materia)
 
 # Acessa API para gerar dados sobre o corona virus(COVID-19) do ponto de vista mundial.
 # jq é o responsável por tratar os dados de saída da API no formato JSON.
+func_api_covid_19(){
+
+   curl -s https://coronavirus-tracker-api.herokuapp.com/v2/locations
+
+}
+
+var_func_api_covid_19=$(func_api_covid_19)
+
+# A função func_atualização_automatica_id_api() tem por finalidade atualizar de forma automatica o id do pais, caso haja alguma alteração na API.
+func_atualização_automatica_id_api(){
+
+   pais="brazil"
+   echo "$var_func_api_covid_19" | jq . | egrep -A 2 -i "$pais" | tr -d "( |,$)" | tail -n 1 | cut -d : -f 2
+
+}
+
+id_api=$(func_atualização_automatica_id_api)
+
+# Dados mundiais COVID-19
 func_dado_mundial(){
 
-    curl -s https://coronavirus-tracker-api.herokuapp.com/v2/locations | jq '{"casos_confirmados": ."latest"."confirmed" , "mortes": ."latest"."deaths" , "recuperados": ."latest"."recovered"}' | egrep -v "(^\{|^\})" | tr -d "\"" | tr -d "\,"
+    echo "$var_func_api_covid_19" | jq '{"casos_confirmados": ."latest"."confirmed" , "mortes": ."latest"."deaths" , "recuperados": ."latest"."recovered"}' | egrep -v "(^\{|^\})" | tr -d "\"" | tr -d "\,"
 
 }
 
 var_func_dado_mundial=$(func_dado_mundial)
 
-# Acessa API para gerar dados sobre o corona virus(COVID-19) no BRASIL.
-# jq é o responsável por tratar os dados de saída da API no formato JSON.
+# Dados do Brasil COVID-19
 func_dado_brasil(){
 
-    curl -s https://coronavirus-tracker-api.herokuapp.com/v2/locations | jq '{ "pais": ."locations"[28]."country" , "atualizacao": ."locations"[28]."last_updated" , "confirmados": ."locations"[28]."latest"."confirmed" , "recuperados": ."locations"[28]."latest"."recovered" , "mortes": ."locations"[28]."latest"."deaths" }' | egrep -v "(^\{|^\})" | tr -d "\"" | tr -d "\," | tr -d "\"" | tr -d "\," | sed "s/T.*//"
+    echo "$var_func_api_covid_19" | jq --argjson id_api $id_api '{ "pais": ."locations"[$id_api]."country" , "atualizacao": ."locations"[28]."last_updated" , "confirmados": ."locations"[28]."latest"."confirmed" , "recuperados": ."locations"[28]."latest"."recovered" , "mortes": ."locations"[28]."latest"."deaths" }' | egrep -v "(^\{|^\})" | tr -d "\"" | tr -d "\," | tr -d "\"" | tr -d "\," | sed "s/T.*//"
 
 }
 
