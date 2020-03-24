@@ -76,6 +76,9 @@ $var_func_dado_brasil
 func_titulo_materia
 
 echo -n "
+Quanto maior o valor de índice, 
+mais recente é a notícia.
+
 Digite o número da noticia: "
 
 # Recebe a opção/número e instância a variável número
