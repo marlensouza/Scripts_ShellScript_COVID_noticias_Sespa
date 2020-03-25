@@ -43,7 +43,7 @@ var_func_api_covid_19=$(func_api_covid_19)
 func_atualização_automatica_id_api(){
 
    pais="brazil"
-   echo "$var_func_api_covid_19" | jq . | egrep -A 2 -i "$pais" | tr -d "( |,$)" | tail -n 1 | cut -d : -f 2
+   echo "$var_func_api_covid_19" | jq . | egrep -B 1 -i "$pais" | tr -d "( |,$)" | head -n 1 | cut -d : -f 2
 
 }
 
