@@ -10,12 +10,19 @@
 # Criado: 22/03/2020
 #
 
-# Função responsável por acessar site da SESPA via CURL no Endereço www.saude.pa.gov.br e filtrar conteúdo via expressão regular
-# com EGREP usanso como parâmetros de expressões regulares as seguintes ocorrências "(covid|corona|gripe)".
+# Função responsável por acessar site da SESPA via CURL no Endereço www.saude.pa.gov.br.
+func_curl_sespa(){
 
+    curl -s http://www.saude.pa.gov.br/category/noticias/page/[0-5]/
+
+}
+
+var_func_curl_sespa=$(func_curl_sespa)
+
+# Função tem poe finalidade filtrar conteúdo via expressão regular com EGREP usanso como parâmetros de expressões regulares as seguintes ocorrências "(covid|corona|gripe)".
 func_sespa(){
 
-    curl -s http://www.saude.pa.gov.br/category/noticias/page/[0-5]/ | egrep -i "(covid|corona|gripe)" | egrep -o "\http\:.*\/" | sed "s/\".*//g" | sort | uniq | egrep -v "\/feed\/$" | nl | sed "s/^ *//;s/\t/ /" | tr " " "=" | egrep -v "\.(jpg|png)$"
+    echo "$var_func_curl_sespa" | egrep -v "(\.(jpg|png)|\/feed\/)$" | egrep -i "(covid|corona|gripe|vacina)" | egrep "\/[0-9]{4}\/[0-9]{2}\/[0-9]{2}\/" | egrep -o ".*title\=.*" | tr -d "\t" | tac | sed "s/<a href\=\"//;s/\".*//" | nl | sed "s/^ *//;s/\t/=/"
 
 }
 
@@ -24,7 +31,7 @@ var_func_sespa=$(func_sespa)
 # Usa a saída da função func_sespa() para gerar uma lista/menu com título e timestamp da respectiva notícia.
 func_titulo_materia(){
 
-    echo "$var_func_sespa" | cut -d / -f 4- | sed "s/\/$//" | sort |egrep -o "([0-9]{4}.*|\/.*)" | sed "s/^\///"| nl
+    echo "$var_func_curl_sespa" | egrep -v "(\.(jpg|png)|\/feed\/)$" | egrep -i "(covid|corona|gripe|vacina)" | egrep "\/[0-9]{4}\/[0-9]{2}\/[0-9]{2}\/" | egrep -o ".*title\=.*" | tr -d "\t" | tac | egrep -o "title=\".*\"" | tr -d "\"" | cut -d " " -f 3- | nl
 }
 
 var_func_titulo_materia=$(func_titulo_materia)
@@ -97,14 +104,19 @@ echo -n "
 Quanto maior o valor de índice, 
 mais recente é a notícia.
 
-Digite o número da noticia: "
+Digite o número da notícia: "
 
 # Recebe a opção/número e instância a variável número
 read numero
 
 # Gera link da notícia
-link_noticia=$(func_sespa | egrep "^$numero=" | sed "s/^$numero=//")
+link_noticia=$(echo "$var_func_sespa" | egrep "^$numero=" | sed "s/^$numero=//")
 
+# Exibe link selecionado no menu.
+echo "
+Link da notícia selecionada:
+$link_noticia
+"
 # Executa navegador para acessar link contido na váriavel de ambiente $link_noticia. O navegador pode ser
 # alterado por qualquer outro, batando assim substituir a "google-chrome" por qualquer outro navegador.
 
