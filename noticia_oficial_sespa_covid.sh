@@ -13,25 +13,25 @@
 # Função responsável por acessar site da SESPA via CURL no Endereço www.saude.pa.gov.br.
 func_curl_sespa(){
 
-    curl -s http://www.saude.pa.gov.br/category/noticias/page/[0-5]/
+    curl -s http://www.saude.pa.gov.br/category/noticias/page/[0-9]/
 
 }
 
 var_func_curl_sespa=$(func_curl_sespa)
 
-# Função tem poe finalidade filtrar conteúdo via expressão regular com EGREP usanso como parâmetros de expressões regulares as seguintes ocorrências "(covid|corona|gripe)".
+# Função tem a finalidade de filtrar conteúdo via expressão regular com EGREP, selecionando apenas os links relevante.
 func_sespa(){
 
-    echo "$var_func_curl_sespa" | egrep -v "(\.(jpg|png)|\/feed\/)$" | egrep -i "(covid|corona|gripe|vacina)" | egrep "\/[0-9]{4}\/[0-9]{2}\/[0-9]{2}\/" | egrep -o ".*title\=.*" | tr -d "\t" | tac | sed "s/<a href\=\"//;s/\".*//" | nl | sed "s/^ *//;s/\t/=/"
+    echo "$var_func_curl_sespa" | egrep -v "(\.(jpg|png)|\/feed\/)$" | egrep "\/[0-9]{4}\/[0-9]{2}\/[0-9]{2}\/" | egrep -o ".*title\=.*" | tr -d "\t" | tac | sed "s/<a href\=\"//;s/\".*//" | nl | sed "s/^ *//;s/\t/=/"
 
 }
 
 var_func_sespa=$(func_sespa)
 
-# Usa a saída da função func_sespa() para gerar uma lista/menu com título e timestamp da respectiva notícia.
+# Usa a saída da função func_sespa() para gerar uma lista/menu com título das respectivas notícias.
 func_titulo_materia(){
 
-    echo "$var_func_curl_sespa" | egrep -v "(\.(jpg|png)|\/feed\/)$" | egrep -i "(covid|corona|gripe|vacina)" | egrep "\/[0-9]{4}\/[0-9]{2}\/[0-9]{2}\/" | egrep -o ".*title\=.*" | tr -d "\t" | tac | egrep -o "title=\".*\"" | tr -d "\"" | cut -d " " -f 3- | nl
+    echo "$var_func_curl_sespa" | egrep -v "(\.(jpg|png)|\/feed\/)$" | egrep "\/[0-9]{4}\/[0-9]{2}\/[0-9]{2}\/" | egrep -o ".*title\=.*" | tr -d "\t" | tac | egrep -o "title=\".*\"" | tr -d "\"" | cut -d " " -f 3- | nl
 }
 
 var_func_titulo_materia=$(func_titulo_materia)
@@ -101,7 +101,7 @@ $var_func_dado_brasil
 func_titulo_materia
 
 echo -n "
-Quanto maior o valor de índice, 
+Quanto maior o valor de índice,
 mais recente é a notícia.
 
 Digite o número da notícia: "
