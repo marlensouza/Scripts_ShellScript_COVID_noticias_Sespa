@@ -44,6 +44,24 @@ func_api_covid_19(){
 
 }
 
+# Função acessa página da SESPA no Twiiter
+func_twitter_sespa(){
+
+  curl -s https://twitter.com/SespaPara
+
+}
+
+var_func_twitter_sespa=$(func_twitter_sespa)
+
+# Função filtra número de infectados por Covid-19 no PARÁ
+func_numero_casos_covid_pa(){
+
+      echo "$var_func_twitter_sespa" | egrep -o "(há [0-9]{2}.*Covid-19)" | head -n 1 | cut -d " " -f 2
+
+}
+
+var_func_numero_casos_covid_pa=$(func_numero_casos_covid_pa)
+
 var_func_api_covid_19=$(func_api_covid_19)
 
 # A função func_atualização_automatica_id_api() tem por finalidade atualizar de forma automatica o id do pais, caso haja alguma alteração na API.
@@ -95,6 +113,10 @@ $var_func_dado_mundial
 
 Dados Brasil COVID-19:
 $var_func_dado_brasil
+
+Dados PARÁ COVID-19:
+  Infectado: $var_func_numero_casos_covid_pa
+  
 "
 
 # Título/menu
